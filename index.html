@@ -1,0 +1,57 @@
+<label for="terms"><strong>Terms & Conditions</strong></label>
+<div style="background:#f9f9f9;border:1px solid #ddd;padding:12px;margin-bottom:12px;border-radius:6px;max-height:200px;overflow:auto;font-size:13px;line-height:1.5;">
+  1. <strong>Inspection Before Washing</strong><br>
+  Our team will inspect your items for stains, tears, or anything needing special attention. We’ll inform you before washing and will only proceed once we have received your confirmation.<br><br>
+
+  2. <strong>Pre-Existing Damage Disclaimer</strong><br>
+  We are not responsible for:
+  <ul style="margin:4px 0 8px 20px;padding:0;">
+    <li>Damage that existed before washing (holes, tears, worn fabric)</li>
+    <li>Shrinkage, fading, or color bleeding caused by poor fabric quality</li>
+    <li>Items without care labels or if special instructions weren’t provided</li>
+  </ul>
+
+  3. <strong>Cleaning Process Limitations</strong><br>
+  Despite careful handling, some wear and tear may occur. We are not liable for:
+  <ul style="margin:4px 0 8px 20px;padding:0;">
+    <li>Shrinkage or color changes</li>
+    <li>Fabric weakness or natural deterioration</li>
+    <li>Items left inside pockets or hidden areas</li>
+  </ul>
+
+  4. <strong>Disposal Policy</strong><br>
+  We will only dispose of items if you clearly ask us to. Otherwise, all items will be returned to you.<br><br>
+
+  5. <strong>Liability & Compensation</strong><br>
+  <ul style="margin:4px 0 0 20px;padding:0;">
+    <li>If an item is lost or incurs any damages during normal cleaning, our maximum compensation is limited to its cleaning value, based on the weight and your subscription.</li>
+    <li>We will not offer full value replacements, refunds or any other extra compensation to cover the original total cost of the damaged items.</li>
+    <li>All subscription payments are final and non-refundable, even if unused or partially used.</li>
+  </ul>
+</div>
+
+<div>
+  <input type="checkbox" id="agreeCheckbox" name="terms" required>
+  <label for="agreeCheckbox" class="small-checkbox-label">I Agree</label>
+</div>
+<div>
+  <input type="checkbox" id="disagreeCheckbox" name="termsDisagree">
+  <label for="disagreeCheckbox" class="small-checkbox-label">I Disagree</label>
+</div>
+
+<script>
+// Only allow one checkbox to be checked at a time
+const agree = document.getElementById('agreeCheckbox');
+const disagree = document.getElementById('disagreeCheckbox');
+
+agree.addEventListener('change', () => { if(agree.checked) disagree.checked = false; });
+disagree.addEventListener('change', () => { if(disagree.checked) agree.checked = false; });
+
+// Optional: prevent form submission if disagree is checked
+document.getElementById('appointmentForm').addEventListener('submit', function(e){
+  if(disagree.checked){
+    e.preventDefault();
+    alert("You must agree to the Terms & Conditions to submit the form.");
+  }
+});
+</script>
