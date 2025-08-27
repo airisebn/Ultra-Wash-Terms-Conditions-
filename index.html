@@ -1,57 +1,159 @@
-<label for="terms"><strong>Terms & Conditions</strong></label>
-<div style="background:#f9f9f9;border:1px solid #ddd;padding:12px;margin-bottom:12px;border-radius:6px;max-height:200px;overflow:auto;font-size:13px;line-height:1.5;">
-  1. <strong>Inspection Before Washing</strong><br>
-  Our team will inspect your items for stains, tears, or anything needing special attention. We’ll inform you before washing and will only proceed once we have received your confirmation.<br><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ultra Wash Terms & Conditions</title>
+<style>
+:root {
+  --font-family: 'Open Sans', sans-serif;
+  --font-size-label: 14px;
+  --font-size-header: 22px;
+  --color-background: #f6f7fa;
+  --color-card-bg: #ffffff;
+  --color-card-border: #dbdfe7;
+  --color-card-shadow: rgba(99, 77, 255, 0.06);
+  --color-header: #333;
+  --color-label: #555;
+  --color-focus-border: #5a4cc2;
+  --color-btn-bg: #ff6d5a;
+  --color-btn-text: #fff;
+  --radius: 6px;
+  --container-width: 440px;
+}
 
-  2. <strong>Pre-Existing Damage Disclaimer</strong><br>
-  We are not responsible for:
-  <ul style="margin:4px 0 8px 20px;padding:0;">
-    <li>Damage that existed before washing (holes, tears, worn fabric)</li>
-    <li>Shrinkage, fading, or color bleeding caused by poor fabric quality</li>
-    <li>Items without care labels or if special instructions weren’t provided</li>
-  </ul>
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-background);
+  display: flex;
+  justify-content: center;
+  padding: 32px;
+}
 
-  3. <strong>Cleaning Process Limitations</strong><br>
-  Despite careful handling, some wear and tear may occur. We are not liable for:
-  <ul style="margin:4px 0 8px 20px;padding:0;">
-    <li>Shrinkage or color changes</li>
-    <li>Fabric weakness or natural deterioration</li>
-    <li>Items left inside pockets or hidden areas</li>
-  </ul>
+form {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px var(--color-card-shadow);
+  padding: 24px;
+  width: var(--container-width);
+}
 
-  4. <strong>Disposal Policy</strong><br>
-  We will only dispose of items if you clearly ask us to. Otherwise, all items will be returned to you.<br><br>
+h1 {
+  text-align: center;
+  font-size: var(--font-size-header);
+  color: var(--color-header);
+  margin-bottom: 24px;
+}
 
-  5. <strong>Liability & Compensation</strong><br>
-  <ul style="margin:4px 0 0 20px;padding:0;">
-    <li>If an item is lost or incurs any damages during normal cleaning, our maximum compensation is limited to its cleaning value, based on the weight and your subscription.</li>
-    <li>We will not offer full value replacements, refunds or any other extra compensation to cover the original total cost of the damaged items.</li>
-    <li>All subscription payments are final and non-refundable, even if unused or partially used.</li>
-  </ul>
-</div>
+.description {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
 
-<div>
-  <input type="checkbox" id="agreeCheckbox" name="terms" required>
-  <label for="agreeCheckbox" class="small-checkbox-label">I Agree</label>
-</div>
-<div>
-  <input type="checkbox" id="disagreeCheckbox" name="termsDisagree">
-  <label for="disagreeCheckbox" class="small-checkbox-label">I Disagree</label>
-</div>
+.scroll-box {
+  background:#f9f9f9;
+  border:1px solid #ddd;
+  padding:12px;
+  border-radius:6px;
+  max-height:300px;
+  overflow:auto;
+  font-size:13px;
+  line-height:1.5;
+  margin-bottom:16px;
+}
+
+.small-checkbox-label {
+  font-size: 13px;
+  margin-left: 4px;
+}
+
+.checkbox-container {
+  margin-bottom: 16px; /* proper spacing before submit button */
+}
+
+button {
+  background-color: var(--color-btn-bg);
+  color: var(--color-btn-text);
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #e05343;
+}
+</style>
+</head>
+<body>
+
+<form id="termsForm" method="POST" action="https://risetotop.app.n8n.cloud/webhook-test/uw-t&c" novalidate>
+  <h1>Terms & Conditions</h1>
+
+  <div class="scroll-box">
+    1. <strong>Inspection Before Washing</strong><br>
+    Our team will inspect your items for stains, tears, or anything needing special attention. We’ll inform you before washing and will only proceed once we have received your confirmation.<br><br>
+
+    2. <strong>Pre-Existing Damage Disclaimer</strong><br>
+    We are not responsible for:
+    <ul style="margin:4px 0 8px 20px;padding:0;">
+      <li>Damage that existed before washing (holes, tears, worn fabric)</li>
+      <li>Shrinkage, fading, or color bleeding caused by poor fabric quality</li>
+      <li>Items without care labels or if special instructions weren’t provided</li>
+    </ul>
+
+    3. <strong>Cleaning Process Limitations</strong><br>
+    Despite careful handling, some wear and tear may occur. We are not liable for:
+    <ul style="margin:4px 0 8px 20px;padding:0;">
+      <li>Shrinkage or color changes</li>
+      <li>Fabric weakness or natural deterioration</li>
+      <li>Items left inside pockets or hidden areas</li>
+    </ul>
+
+    4. <strong>Disposal Policy</strong><br>
+    We will only dispose of items if you clearly ask us to. Otherwise, all items will be returned to you.<br><br>
+
+    5. <strong>Liability & Compensation</strong><br>
+    <ul style="margin:4px 0 0 20px;padding:0;">
+      <li>If an item is lost or incurs any damages during normal cleaning, our maximum compensation is limited to its cleaning value, based on the weight and your subscription.</li>
+      <li>We will not offer full value replacements, refunds, or any other extra compensation to cover the original total cost of the damaged items.</li>
+      <li>All subscription payments are final and non-refundable, even if unused or partially used.</li>
+    </ul>
+  </div>
+
+  <div class="checkbox-container">
+    <input type="checkbox" id="agreeCheckbox" name="termsStatus" value="Agree">
+    <label for="agreeCheckbox" class="small-checkbox-label">I Agree</label>
+  </div>
+
+  <div class="checkbox-container">
+    <input type="checkbox" id="disagreeCheckbox" name="termsStatus" value="Disagree">
+    <label for="disagreeCheckbox" class="small-checkbox-label">I Disagree</label>
+  </div>
+
+  <button type="submit">Submit</button>
+</form>
 
 <script>
-// Only allow one checkbox to be checked at a time
 const agree = document.getElementById('agreeCheckbox');
 const disagree = document.getElementById('disagreeCheckbox');
 
+// Only allow one checkbox to be selected at a time
 agree.addEventListener('change', () => { if(agree.checked) disagree.checked = false; });
 disagree.addEventListener('change', () => { if(disagree.checked) agree.checked = false; });
 
-// Optional: prevent form submission if disagree is checked
-document.getElementById('appointmentForm').addEventListener('submit', function(e){
-  if(disagree.checked){
-    e.preventDefault();
-    alert("You must agree to the Terms & Conditions to submit the form.");
-  }
+// Form submission proceeds regardless of selection
+document.getElementById('termsForm').addEventListener('submit', function(e){
+  // Optional: show a quick confirmation
+  alert("Form submitted successfully.");
 });
 </script>
+
+</body>
+</html>
