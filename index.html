@@ -93,8 +93,8 @@ button:hover {
 </head>
 <body>
 
-<form id="termsForm" method="POST" action="https://risetotop.app.n8n.cloud/webhook-test/uw-t&c" novalidate>
-  <h1>Terms & Conditions</h1>
+<form id="termsForm">
+  <h1>Ultra Wash Terms & Conditions</h1>
 
   <div class="scroll-box">
     1. <strong>Inspection Before Washing</strong><br>
@@ -128,12 +128,12 @@ button:hover {
   </div>
 
   <div class="checkbox-container">
-    <input type="checkbox" id="agreeCheckbox" name="termsStatus" value="Agree">
+    <input type="checkbox" id="agreeCheckbox">
     <label for="agreeCheckbox" class="small-checkbox-label">I Agree</label>
   </div>
 
   <div class="checkbox-container">
-    <input type="checkbox" id="disagreeCheckbox" name="termsStatus" value="Disagree">
+    <input type="checkbox" id="disagreeCheckbox">
     <label for="disagreeCheckbox" class="small-checkbox-label">I Disagree</label>
   </div>
 
@@ -144,13 +144,13 @@ button:hover {
 const agree = document.getElementById('agreeCheckbox');
 const disagree = document.getElementById('disagreeCheckbox');
 
-// Only allow one checkbox to be selected at a time
+// Only allow one checkbox to be selected
 agree.addEventListener('change', () => { if(agree.checked) disagree.checked = false; });
 disagree.addEventListener('change', () => { if(disagree.checked) agree.checked = false; });
 
 // Form submission proceeds regardless of selection
 document.getElementById('termsForm').addEventListener('submit', function(e){
-  // Optional: show a quick confirmation
+  // No alert, just submit
   alert("Form submitted successfully.");
 });
 </script>
