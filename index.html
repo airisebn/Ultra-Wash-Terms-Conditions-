@@ -94,81 +94,6 @@ button[type="submit"]:hover { background-color: #e05343; }
   border-left: 4px solid #4a90e2;
 }
 
-/* Custom dropdown styles */
-.custom-dropdown {
-  position: relative;
-  margin-bottom: 16px;
-}
-
-.dropdown-select {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px;
-  border: 1px solid var(--color-input-border);
-  border-radius: var(--radius);
-  cursor: pointer;
-  background-color: white;
-}
-
-.dropdown-select:after {
-  content: "▼";
-  font-size: 12px;
-  transition: transform 0.2s;
-}
-
-.dropdown-select.open:after {
-  transform: rotate(180deg);
-}
-
-.dropdown-search {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid var(--color-input-border);
-  border-radius: var(--radius);
-  margin-bottom: 8px;
-  box-sizing: border-box;
-  display: none;
-}
-
-.dropdown-options {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  max-height: 200px;
-  overflow-y: auto;
-  border: 1px solid var(--color-input-border);
-  border-radius: var(--radius);
-  background: white;
-  z-index: 100;
-  display: none;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.dropdown-options.open {
-  display: block;
-}
-
-.dropdown-option {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.dropdown-option:last-child {
-  border-bottom: none;
-}
-
-.dropdown-option:hover {
-  background-color: #f6f7fa;
-}
-
-.dropdown-option.selected {
-  background-color: #e6f7ff;
-  font-weight: 600;
-}
-
 .scroll-box {
   background:#f9f9f9;
   border:1px solid #ddd;
@@ -196,6 +121,50 @@ button[type="submit"]:hover { background-color: #e05343; }
   font-size: 13px;
   vertical-align: middle;
 }
+
+.search-button {
+  background-color: var(--color-btn-bg);
+  color: var(--color-btn-text);
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: var(--font-size-input);
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.search-button:hover {
+  background-color: #e05343;
+}
+
+.search-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.customer-not-found {
+  color: #ff6d5a;
+  font-size: 13px;
+  margin-top: -10px;
+  margin-bottom: 16px;
+  display: none;
+}
+
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 </style>
 </head>
 <body>
@@ -203,16 +172,12 @@ button[type="submit"]:hover { background-color: #e05343; }
 <form id="termsForm">
   <h1>Ultra Wash Terms & Conditions</h1>
   
-  <!-- Customer Reference Field -->
-  <label for="customerRef">Customer Reference</label>
-  <div class="custom-dropdown" id="customerRefDropdown">
-    <div class="dropdown-select" id="customerRefSelect">
-      <span>Select Customer</span>
-    </div>
-    <input type="text" class="dropdown-search" id="customerRefSearch" placeholder="Search customers...">
-    <div class="dropdown-options" id="customerRefOptions"></div>
-    <input type="hidden" id="customerRef" name="customerRef" required>
-  </div>
+  <!-- Customer ID Input Field -->
+  <label for="customerIdInput">Customer ID</label>
+  <input type="text" id="customerIdInput" name="customerIdInput" placeholder="Enter your Customer ID" required>
+  <button type="button" id="searchCustomerBtn" class="search-button">Find My Information</button>
+  <div id="customerNotFound" class="customer-not-found">Customer not found. Please check your Customer ID.</div>
+  <input type="hidden" id="customerRef" name="customerRef" required>
 
   <!-- Auto-filled customer info -->
   <div id="customerInfo" style="display: none;">
@@ -270,6 +235,9 @@ button[type="submit"]:hover { background-color: #e05343; }
 <script>
 const agree = document.getElementById('agreeCheckbox');
 const disagree = document.getElementById('disagreeCheckbox');
+const searchBtn = document.getElementById('searchCustomerBtn');
+const customerIdInput = document.getElementById('customerIdInput');
+const customerNotFound = document.getElementById('customerNotFound');
 
 // Only allow one checkbox to be selected
 agree.addEventListener('change', () => { if(agree.checked) disagree.checked = false; });
@@ -281,7 +249,7 @@ document.getElementById('termsForm').addEventListener('submit', function(e){
   
   // Validate customer selection
   if (!document.getElementById('customerRef').value) {
-    alert('Please select a customer');
+    alert('Please enter your Customer ID first');
     return;
   }
   
@@ -308,126 +276,67 @@ document.getElementById('termsForm').addEventListener('submit', function(e){
   }, 1000);
 });
 
-// NEW: Custom dropdown functionality
-const customerRefDropdown = document.getElementById('customerRefDropdown');
-const customerRefSelect = document.getElementById('customerRefSelect');
-const customerRefSearch = document.getElementById('customerRefSearch');
-const customerRefOptions = document.getElementById('customerRefOptions');
-const customerRefHidden = document.getElementById('customerRef');
-const customerInfo = document.getElementById('customerInfo');
-const customerName = document.getElementById('customerName');
-const customerPhone = document.getElementById('customerPhone');
+// Customer search functionality
+searchBtn.addEventListener('click', searchCustomer);
+customerIdInput.addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    searchCustomer();
+  }
+});
 
 // Global variable to store customers
 let allCustomers = [];
 
-// Setup custom dropdown functionality
-function setupCustomDropdown() {
-  // Toggle dropdown visibility
-  customerRefSelect.addEventListener('click', function(e) {
-    e.stopPropagation();
-    customerRefDropdown.classList.toggle('open');
-    customerRefSearch.style.display = customerRefDropdown.classList.contains('open') ? 'block' : 'none';
-    customerRefOptions.classList.toggle('open');
-    
-    if (customerRefDropdown.classList.contains('open')) {
-      customerRefSearch.focus();
-    }
-  });
+// Search for customer by ID
+async function searchCustomer() {
+  const searchId = customerIdInput.value.trim();
+  if (!searchId) {
+    alert('Please enter a Customer ID');
+    return;
+  }
   
-  // Filter options when typing in search
-  customerRefSearch.addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    const options = customerRefOptions.querySelectorAll('.dropdown-option');
-    
-    options.forEach(option => {
-      const text = option.textContent.toLowerCase();
-      option.style.display = text.includes(searchTerm) ? 'block' : 'none';
-    });
-  });
+  // Show loading state
+  searchBtn.innerHTML = '<span class="loading"></span> Searching...';
+  searchBtn.disabled = true;
   
-  // Close dropdown when clicking outside
-  document.addEventListener('click', function(e) {
-    if (!customerRefDropdown.contains(e.target)) {
-      customerRefDropdown.classList.remove('open');
-      customerRefSearch.style.display = 'none';
-      customerRefOptions.classList.remove('open');
-    }
-  });
-  
-  // Prevent closing when clicking inside dropdown
-  customerRefDropdown.addEventListener('click', function(e) {
-    e.stopPropagation();
-  });
-}
-
-// Populate custom dropdown with customers
-function populateCustomDropdown(customers) {
-  customerRefOptions.innerHTML = '';
-  
-  customers.forEach(cust => {
-    const option = document.createElement('div');
-    option.className = 'dropdown-option';
-    option.textContent = `${cust["Name"]} (${cust["Customer ID"] || cust["Phone"]})`;
-    option.dataset.value = cust["Customer ID"] || cust["Phone"];
-    option.dataset.name = cust["Name"];
-    option.dataset.phone = cust["Phone"];
-    
-    option.addEventListener('click', function() {
-      // Update selected value
-      customerRefHidden.value = this.dataset.value;
-      customerRefSelect.querySelector('span').textContent = this.textContent;
-      
-      // Close dropdown
-      customerRefDropdown.classList.remove('open');
-      customerRefSearch.style.display = 'none';
-      customerRefOptions.classList.remove('open');
-      
-      // Remove previous selections
-      customerRefOptions.querySelectorAll('.dropdown-option').forEach(opt => {
-        opt.classList.remove('selected');
-      });
-      
-      // Highlight selected option
-      this.classList.add('selected');
-      
-      // Auto-fill customer info
-      customerName.value = this.dataset.name || "";
-      customerPhone.value = this.dataset.phone || "";
-      customerInfo.style.display = 'block';
-    });
-    
-    customerRefOptions.appendChild(option);
-  });
-}
-
-// Load customer list from Google Apps Script (same as in new form)
-async function loadCustomers() {
   try {
+    // Load customers from the server
     const response = await fetch("https://script.google.com/macros/s/AKfycbwRk-T3xGVFx0PzQSXqJ9piRLk8tXUWzcyDDHOfCxDuhLJ1V2PAPt87LETLZ1ZkbpnZmA/exec");
     allCustomers = await response.json();
     
-    // Set up custom dropdown
-    setupCustomDropdown();
-    populateCustomDropdown(allCustomers);
-
+    // Search for the customer
+    const foundCustomer = allCustomers.find(cust => 
+      cust["Customer ID"] === searchId
+    );
+    
+    if (foundCustomer) {
+      // Update customer info
+      document.getElementById('customerRef').value = foundCustomer["Customer ID"] || "";
+      document.getElementById('customerName').value = foundCustomer["Name"] || "";
+      document.getElementById('customerPhone').value = foundCustomer["Phone"] || "";
+      document.getElementById('customerInfo').style.display = 'block';
+      customerNotFound.style.display = 'none';
+    } else {
+      // Customer not found
+      document.getElementById('customerInfo').style.display = 'none';
+      document.getElementById('customerRef').value = "";
+      customerNotFound.style.display = 'block';
+    }
   } catch (err) {
     console.error("Error loading customers:", err);
-    // Fallback to sample data if live data fails
-    const sampleCustomers = [
-      { "Name": "John Smith", "Phone": "+673 8221133", "Customer ID": "CUST001" },
-      { "Name": "Sarah Johnson", "Phone": "+673 8221144", "Customer ID": "CUST002" },
-      { "Name": "Michael Brown", "Phone": "+673 8221155", "Customer ID": "CUST003" },
-      { "Name": "Emily Davis", "Phone": "+673 8221166", "Customer ID": "CUST004" },
-      { "Name": "David Wilson", "Phone": "+673 8221177", "Customer ID": "CUST005" }
-    ];
-    setupCustomDropdown();
-    populateCustomDropdown(sampleCustomers);
+    alert("Error loading customer data. Please try again.");
+  } finally {
+    // Reset search button
+    searchBtn.textContent = 'Find My Information';
+    searchBtn.disabled = false;
   }
 }
 
-// Initialize the dropdown when page loads
-window.addEventListener('DOMContentLoaded', loadCustomers);
+// Initialize when page loads
+window.addEventListener('DOMContentLoaded', function() {
+  // No preloading needed now - we'll load when searching
+});
 </script>
 
 </body>
